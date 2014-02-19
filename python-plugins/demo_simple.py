@@ -1,15 +1,15 @@
 # Example (stub) python plugin for collectd
 #
 import collectd
-import config as cconfig
 
+import collectd_util as util
 
 ## collectd call-back functions
 ##
 
 def config_cb(config, data=None):
     collectd.info("config_cb: ")
-    cfg = cconfig.map_collectd_config(config)
+    cfg = util.map_collectd_config(config)
     collectd.info("{!r}".format(cfg))
     collectd.info("config_cb: -- end --")
 
@@ -31,7 +31,7 @@ def notification_cb(notification, data=None):
 
 
 def flush_cb(timeout, identifier, data=None):
-    collectd.info("flush_cb: [{0}] {1}".format(timeout, identifier)))
+    collectd.info("flush_cb: [{0}] {1}".format(timeout, identifier))
 
 def log_cb(severity, message, data=None):
     # print here, if logging is used it will cause infinite recursion.
@@ -44,7 +44,7 @@ collectd.register_config(config_cb)
 collectd.register_init(init_cb)
 collectd.register_shutdown(shutdown_cb)
 
-collectd.register_read(read_cb, interval)
+collectd.register_read(read_cb)
 collectd.register_write(write_cb)
 collectd.register_notification(notification_cb)
 

@@ -1,13 +1,12 @@
 # Example usage of the closure helper for collectd-python plugins
 #
-import closure
 import collectd
 
-import config as cconfig
+import collectd_util as util
 
 
 
-class DemoClosureCollectdPlugin(closure.CollectdPluginBase):
+class DemoClosureCollectdPlugin(util.CollectdPluginBase):
 
     def __init__(self):
         self._log("initializing.")
@@ -19,23 +18,23 @@ class DemoClosureCollectdPlugin(closure.CollectdPluginBase):
         self._log("init_cb()")
 
     def config_cb(self, config, data=None):
-        self.config = cconfig.map_collectd_config(config)
+        self.config = util.map_collectd_config(config)
         if "Module.config" in self.config:
             self._log("config_cb: {!r}".format(self.config))
         if "Module.init" in self.config:
-            collectd.register_init(closure.init_closure(self), name=self.__module__)
+            collectd.register_init(util.init_closure(self), name=self.__module__)
         if "Module.read" in self.config:
-            collectd.register_read(closure.read_closure(self), name=self.__module__)
+            collectd.register_read(util.read_closure(self), name=self.__module__)
         if "Module.write" in self.config:
-            collectd.register_write(closure.write_closure(self), name=self.__module__)
+            collectd.register_write(util.write_closure(self), name=self.__module__)
         if "Module.notification" in self.config:
-            collectd.register_notification(closure.notification_closure(self), name=self.__module__)
+            collectd.register_notification(util.notification_closure(self), name=self.__module__)
         if "Module.flush" in self.config:
-            collectd.register_flush(closure.flush_closure(self), name=self.__module__)
+            collectd.register_flush(util.flush_closure(self), name=self.__module__)
         if "Module.log" in self.config:
-            collectd.register_log(closure.log_closure(self), name=self.__module__)
+            collectd.register_log(util.log_closure(self), name=self.__module__)
         if "Module.shutdown" in self.config:
-            collectd.register_shutdown(closure.shutdown_closure(self), name=self.__module__)
+            collectd.register_shutdown(util.shutdown_closure(self), name=self.__module__)
 
     def read_cb(self, data=None):
         self._log("read_cb()")
@@ -62,8 +61,8 @@ class DemoClosureCollectdPlugin(closure.CollectdPluginBase):
 
 plugin = DemoClosureCollectdPlugin()
 
-#collectd.register_init(closure.init_closure(plugin), name=plugin.__module__)
-collectd.register_config(closure.config_closure(plugin), name=plugin.__module__)
+#collectd.register_init(util.init_closure(plugin), name=plugin.__module__)
+collectd.register_config(util.config_closure(plugin), name=plugin.__module__)
 
 
 
